@@ -4,6 +4,7 @@ interface Todo {
     id: number;
     text: string;
     completed: boolean;
+    date?: Date | null;
 }
 
 interface TodoState {
@@ -12,8 +13,8 @@ interface TodoState {
 
 const initialState: TodoState = {
     todos: [
-        { id: 1, text: 'todo1', completed: false},
-        { id: 2, text: 'todo2', completed: false},
+       { id: 1, text: 'todo1', completed: false, date: new Date()},
+       { id: 2, text: 'todo2', completed: false, date: null},
     ],
 }
 
@@ -38,8 +39,16 @@ const todoSlice = createSlice({
                 todo.completed = !todo.completed;
             }
         },
+        setDate: (state, action: PayloadAction<{ id: number; date: Date }>) => {
+            const { id, date } = action.payload;
+
+            const todo = state.todos.find((todo) => todo.id === id);
+            if (todo) {
+                todo.date = date;
+            }
+        }
     },
 });
 
-export const { addTodo, removeTodo, toggleComplete } = todoSlice.actions;
+export const { addTodo, removeTodo, toggleComplete, setDate } = todoSlice.actions;
 export default todoSlice.reducer;
